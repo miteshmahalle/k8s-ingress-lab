@@ -1,0 +1,75 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blue-app
+  namespace: ingress-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blue-app
+  template:
+    metadata:
+      labels:
+        app: blue-app
+    spec:
+      hostname: blue-app
+      containers:
+        - name: whoami
+          image: miteshmahalle/whoami-ingress-lab:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blue-service
+  namespace: ingress-lab
+spec:
+  type: ClusterIP
+  selector:
+    app: blue-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-app
+  namespace: ingress-lab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: green-app
+  template:
+    metadata:
+      labels:
+        app: green-app
+    spec:
+      hostname: green-app
+      containers:
+        - name: whoami
+          image: miteshmahalle/whoami-ingress-lab:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: green-service
+  namespace: ingress-lab
+spec:
+  type: ClusterIP
+  selector:
+    app: green-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+
